@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "TOMO — Cultural Email Copilot",
+  "version": "0.1.0",
+  "description": "Gmail 작성 중인 이메일을 문화·언어·업무 관계 맥락에 맞게 분석하고 현지화 이메일을 추천합니다.",
+  "action": {
+    "default_title": "TOMO 열기"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["sidePanel", "storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "http://localhost:8080/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  }
+}
