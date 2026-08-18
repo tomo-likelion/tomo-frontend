@@ -32,7 +32,9 @@ export default function App() {
       try {
         const profile = await getRecipient(ctx.recipientEmail);
         setRecipient(profile);
-        setScreen((prev) => (prev === "result" ? prev : "matched"));
+        setScreen((prev) =>
+          prev === "result" || prev === "loading" ? prev : "matched"
+        );
         setError(null);
       } catch (e) {
         setRecipient(null);
