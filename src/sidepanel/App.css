@@ -2,8 +2,8 @@
   --tomo-bg: #14161a;
   --tomo-panel: #1c1f24;
   --tomo-panel-alt: #22262c;
-  --tomo-lime: #c8fa3c;
-  --tomo-lime-dim: #a3d02b;
+  --tomo-lime: #f1ff0a;
+  --tomo-lime-dim:#c4d407;
   --tomo-text: #f3f5f0;
   --tomo-text-dim: #9aa0a6;
   --tomo-border: #2c3036;
@@ -307,6 +307,177 @@ body {
 }
 
 .tomo-empty { color: var(--tomo-text-dim); font-size: 12px; }
+
+/* Result — Info block */
+.tomo-info-block { display: flex; flex-direction: column; gap: 10px; }
+.tomo-info-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.tomo-info-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tomo-lime);
+}
+.tomo-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--tomo-panel);
+  border: 1px solid var(--tomo-border);
+  border-radius: 14px;
+}
+.tomo-profile-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--tomo-panel-alt);
+  color: var(--tomo-lime);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.tomo-profile-main { flex: 1; min-width: 0; }
+.tomo-profile-name { font-weight: 700; font-size: 14px; }
+.tomo-profile-email {
+  font-size: 11px;
+  color: var(--tomo-text-dim);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tomo-edit-link {
+  background: none;
+  border: none;
+  color: var(--tomo-lime);
+  font-size: 11px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+.tomo-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  text-align: center;
+}
+.tomo-meta-label { font-size: 10px; color: var(--tomo-text-dim); margin-bottom: 4px; }
+.tomo-meta-value { font-size: 12px; font-weight: 700; color: var(--tomo-lime); }
+
+/* Result — tab nav */
+.tomo-tabnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+.tomo-tabnav-arrow {
+  background: none;
+  border: none;
+  color: var(--tomo-text-dim);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
+.tomo-tabnav-item {
+  background: none;
+  border: none;
+  color: var(--tomo-text-dim);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.tomo-tabnav-item.active { color: var(--tomo-lime); font-weight: 800; }
+
+/* Result — analysis card */
+.tomo-analysis-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 16px;
+  background: linear-gradient(180deg, rgba(200, 250, 60, 0.08) 0%, rgba(200, 250, 60, 0.02) 100%);
+  border: 1px solid var(--tomo-border);
+  border-radius: 16px;
+}
+.tomo-risk-title {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tomo-lime);
+}
+.tomo-risk-score {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--tomo-lime);
+}
+.tomo-risk-score-max { font-size: 14px; color: var(--tomo-text-dim); font-weight: 600; }
+.tomo-risk-desc {
+  text-align: center;
+  font-size: 12px;
+  color: var(--tomo-text-dim);
+  line-height: 1.5;
+  margin: 0 0 4px;
+}
+.tomo-issues-title { font-size: 13px; font-weight: 700; margin-top: 4px; }
+.tomo-issue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tomo-issue-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--tomo-panel);
+  border-radius: 10px;
+  font-size: 12px;
+}
+.tomo-issue-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 42px;
+}
+.tomo-issue-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.tomo-issue-high .tomo-issue-dot { background: var(--tomo-red); }
+.tomo-issue-high { color: var(--tomo-red); }
+.tomo-issue-medium .tomo-issue-dot { background: var(--tomo-amber); }
+.tomo-issue-medium { color: var(--tomo-amber); }
+.tomo-issue-low .tomo-issue-dot { background: var(--tomo-lime); }
+.tomo-issue-low { color: var(--tomo-lime); }
+.tomo-issue-text { color: var(--tomo-text); flex: 1; }
+.tomo-goto-recommend {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: var(--tomo-lime);
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 4px;
+}
 
 /* Modal */
 .tomo-modal-backdrop {
