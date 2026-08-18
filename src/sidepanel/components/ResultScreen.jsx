@@ -1,71 +1,162 @@
 import { useState } from "react";
 
-const SEVERITY_LABEL = { HIGH: "높음", MEDIUM: "보통", LOW: "낮음" };
+const LANGUAGE_LABEL = { ko: "한국어", ja: "일본어", en: "영어" };
+const RELATIONSHIP_LABEL = { CLIENT: "고객사", PARTNER: "외부 협력사", COLLEAGUE: "동료" };
+const ISSUE_LABEL = { HIGH: "위험", MEDIUM: "보통", LOW: "적정" };
 
-function ScoreGauge({ score = 0 }) {
-  const level = score >= 75 ? "high" : score >= 50 ? "mid" : "low";
+const TABS = [
+  { key: "reasons", label: "분석 이유" },
+  { key: "analysis", label: "분석 결과" },
+  { key: "recommendation", label: "추천 이메일" },
+];
+
+function initials(name = "") {
+  return name.slice(0, 2).toUpperCase();
+}
+
+function ProfileCard({ recipient, onEdit }) {
   return (
-    <div className={`tomo-score tomo-score-${level}`}>
-      <div className="tomo-score-number">{score}</div>
-      <div className="tomo-score-max">/100</div>
-      <div className="tomo-score-label">문화적 수용 지수</div>
+    <div className="tomo-info-block">
+      <div className="tomo-info-label">
+        <span className="tomo-info-dot" />
+        Info.
+      </div>
+
+      <div className="tomo-profile-card">
+        <div className="tomo-profile-avatar">{initials(recipient?.name)}</div>
+        <div className="tomo-profile-main">
+          <div className="tomo-profile-name">{recipient?.name}</div>
+          <div className="tomo-profile-email">{recipient?.email}</div>
+        </div>
+        <button className="tomo-edit-link" onClick={onEdit}>
+          수정하기
+        </button>
+      </div>
+
+      <div className="tomo-meta-grid">
+        <div className="tomo-meta-col">
+          <div className="tomo-meta-label">국가·언어</div>
+          <div className="tomo-meta-value">
+            {LANGUAGE_LABEL[recipient?.languageCode] || recipient?.languageCode || "—"}
+          </div>
+        </div>
+        <div className="tomo-meta-col">
+          <div className="tomo-meta-label">관계</div>
+          <div className="tomo-meta-value">
+            {RELATIONSHIP_LABEL[recipient?.relationship] || recipient?.relationship || "—"}
+          </div>
+        </div>
+        <div className="tomo-meta-col">
+          <div className="tomo-meta-label">소통 방식</div>
+          <div className="tomo-meta-value">{recipient?.communicationStyle || "—"}</div>
+        </div>
+      </div>
     </div>
   );
 }
 
-function RiskList({ risks }) {
-  if (!risks?.length) {
-    return <p className="tomo-empty">탐지된 문화적 위험 표현이 없습니다.</p>;
-  }
+function TabNav({ activeTab, onChange }) {
+  const activeIndex = TABS.findIndex((t) => t.key === activeTab);
+  const go = (delta) => {
+    const next = (activeIndex + delta + TABS.length) % TABS.length;
+    onChange(TABS[next].key);
+  };
   return (
-    <ul className="tomo-risk-list">
-      {risks.map((risk, i) => (
-        <li key={i} className={`tomo-risk-item tomo-risk-${risk.severity?.toLowerCase()}`}>
-          <div className="tomo-risk-head">
-            <span className="tomo-risk-text">“{risk.text}”</span>
-            <span className="tomo-risk-severity">
-              {SEVERITY_LABEL[risk.severity] || risk.severity}
-            </span>
-          </div>
-          <p className="tomo-risk-reason">{risk.reason}</p>
-        </li>
+    <div className="tomo-tabnav">
+      <button className="tomo-tabnav-arrow" onClick={() => go(-1)} aria-label="이전">
+        ‹
+      </button>
+      {TABS.map((tab) => (
+        <button
+          key={tab.key}
+          className={`tomo-tabnav-item ${tab.key === activeTab ? "active" : ""}`}
+          onClick={() => onChange(tab.key)}
+        >
+          {tab.label}
+        </button>
       ))}
-    </ul>
-  );
-}
-
-function ReasonList({ risks }) {
-  if (!risks?.length) {
-    return <p className="tomo-empty">별도 변경 사유가 없습니다.</p>;
-  }
-  return (
-    <ul className="tomo-reason-list">
-      {risks.map((risk, i) => (
-        <li key={i} className="tomo-reason-item">
-          <span className="tomo-reason-dot" />
-          <span>{risk.suggestion || risk.reason}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function RecommendationPanel({ recommendation, onApply }) {
-  if (!recommendation) return <p className="tomo-empty">추천 이메일이 없습니다.</p>;
-  return (
-    <div className="tomo-recommendation">
-      <div className="tomo-recommendation-subject">{recommendation.subject}</div>
-      <div className="tomo-recommendation-body">{recommendation.body}</div>
-      <button className="tomo-primary-btn" onClick={onApply}>
-        Gmail 본문에 적용
+      <button className="tomo-tabnav-arrow" onClick={() => go(1)} aria-label="다음">
+        ›
       </button>
     </div>
   );
 }
 
-export default function ResultScreen({ analysis, onApply, onBack }) {
-  const [mainTab, setMainTab] = useState("analysis"); // analysis | recommendation
-  const [subTab, setSubTab] = useState("risks"); // risks | reasons
+function AnalysisPanel({ result, onGotoRecommendation }) {
+  const score = result?.riskScore ?? 0;
+  return (
+    <div className="tomo-analysis-card">
+      <div className="tomo-risk-title">문화적 오해 위험도</div>
+      <div className="tomo-risk-score">
+        {score}
+        <span className="tomo-risk-score-max">/100</span>
+      </div>
+      <p className="tomo-risk-desc">{result?.requestSummary}</p>
+
+      <div className="tomo-issues-title">발견된 이슈</div>
+      {result?.risks?.length ? (
+        <ul className="tomo-issue-list">
+          {result.risks.map((risk, i) => (
+            <li key={i} className="tomo-issue-row">
+              <span className={`tomo-issue-badge tomo-issue-${risk.severity?.toLowerCase()}`}>
+                <span className="tomo-issue-dot" />
+                {ISSUE_LABEL[risk.severity] || risk.severity}
+              </span>
+              <span className="tomo-issue-text">{risk.text}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="tomo-empty">탐지된 문화적 위험 표현이 없습니다.</p>
+      )}
+
+      <button className="tomo-goto-recommend" onClick={onGotoRecommendation}>
+        추천 이메일 보기 ›
+      </button>
+    </div>
+  );
+}
+
+function ReasonsPanel({ risks }) {
+  return (
+    <div className="tomo-analysis-card">
+      <div className="tomo-issues-title">변경 이유</div>
+      {risks?.length ? (
+        <ul className="tomo-reason-list">
+          {risks.map((risk, i) => (
+            <li key={i} className="tomo-reason-item">
+              <span className="tomo-reason-dot" />
+              <span>{risk.suggestion || risk.reason}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="tomo-empty">별도 변경 사유가 없습니다.</p>
+      )}
+    </div>
+  );
+}
+
+function RecommendationPanel({ recommendation, onApply }) {
+  return (
+    <div className="tomo-analysis-card">
+      {recommendation ? (
+        <div className="tomo-recommendation">
+          <div className="tomo-recommendation-subject">{recommendation.subject}</div>
+          <div className="tomo-recommendation-body">{recommendation.body}</div>
+          <button className="tomo-primary-btn" onClick={onApply}>
+            Gmail 본문에 적용
+          </button>
+        </div>
+      ) : (
+        <p className="tomo-empty">추천 이메일이 없습니다.</p>
+      )}
+    </div>
+  );
+}
+
+export default function ResultScreen({ analysis, onApply, onBack, onEdit }) {
+  const [activeTab, setActiveTab] = useState("analysis");
   const { recipient, analysis: result, recommendation } = analysis;
 
   return (
@@ -74,64 +165,16 @@ export default function ResultScreen({ analysis, onApply, onBack }) {
         ‹ 다시 분석하기
       </button>
 
-      <div className="tomo-recipient-mini">
-        <div className="tomo-avatar tomo-avatar-sm">{recipient?.name?.slice(0, 1)}</div>
-        <div>
-          <div className="tomo-recipient-name">{recipient?.name}</div>
-          <div className="tomo-tag-row">
-            <span className="tomo-tag">{recipient?.languageCode}</span>
-            <span className="tomo-tag">{recipient?.relationship}</span>
-          </div>
-        </div>
-      </div>
+      <ProfileCard recipient={recipient} onEdit={onEdit} />
 
-      <ScoreGauge score={result?.riskScore ?? 0} />
+      <TabNav activeTab={activeTab} onChange={setActiveTab} />
 
-      <p className="tomo-summary">{result?.requestSummary}</p>
-
-      <div className="tomo-main-tabs">
-        <button
-          className={mainTab === "analysis" ? "active" : ""}
-          onClick={() => setMainTab("analysis")}
-        >
-          분석 결과
-        </button>
-        <button
-          className={mainTab === "recommendation" ? "active" : ""}
-          onClick={() => setMainTab("recommendation")}
-        >
-          추천 이메일
-        </button>
-      </div>
-
-      {mainTab === "analysis" && (
-        <div className="tomo-tab-panel">
-          <div className="tomo-sub-tabs">
-            <button
-              className={subTab === "risks" ? "active" : ""}
-              onClick={() => setSubTab("risks")}
-            >
-              위험 이슈
-            </button>
-            <button
-              className={subTab === "reasons" ? "active" : ""}
-              onClick={() => setSubTab("reasons")}
-            >
-              변경 이유
-            </button>
-          </div>
-          {subTab === "risks" ? (
-            <RiskList risks={result?.risks} />
-          ) : (
-            <ReasonList risks={result?.risks} />
-          )}
-        </div>
+      {activeTab === "reasons" && <ReasonsPanel risks={result?.risks} />}
+      {activeTab === "analysis" && (
+        <AnalysisPanel result={result} onGotoRecommendation={() => setActiveTab("recommendation")} />
       )}
-
-      {mainTab === "recommendation" && (
-        <div className="tomo-tab-panel">
-          <RecommendationPanel recommendation={recommendation} onApply={onApply} />
-        </div>
+      {activeTab === "recommendation" && (
+        <RecommendationPanel recommendation={recommendation} onApply={onApply} />
       )}
     </div>
   );
