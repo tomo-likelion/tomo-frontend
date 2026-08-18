@@ -1,7 +1,7 @@
 export default function LandingScreen({ onGuide }) {
   return (
     <div className="tomo-screen tomo-landing">
-      <div className="tomo-landing-badge">tomo</div>
+      <img className="tomo-landing-badge" src="/logo.png" alt="tomo" />
       <p className="tomo-landing-title">Making every collaboration feel local.</p>
       <p className="tomo-landing-desc">
         Gmail에서 해외 파트너에게 보낼 이메일을 작성해주세요.
