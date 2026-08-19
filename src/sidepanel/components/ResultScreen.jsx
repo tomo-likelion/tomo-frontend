@@ -138,39 +138,19 @@ function ReasonsPanel({ risks }) {
 }
 
 function RecommendationPanel({ recommendation, onApply }) {
-  const [view, setView] = useState("local"); // "korean" | "local"
-
-  if (!recommendation) {
-    return (
-      <div className="tomo-analysis-card">
-        <p className="tomo-empty">추천 이메일이 없습니다.</p>
-      </div>
-    );
-  }
-
-  const hasKorean = recommendation.koreanSubject != null || recommendation.koreanBody != null;
-  const subject = view === "korean" ? recommendation.koreanSubject : recommendation.subject;
-  const body = view === "korean" ? recommendation.koreanBody : recommendation.body;
-
   return (
     <div className="tomo-analysis-card">
-      {hasKorean && (
-        <div className="tomo-lang-toggle">
-          <button className={view === "korean" ? "active" : ""} onClick={() => setView("korean")}>
-            본문
-          </button>
-          <button className={view === "local" ? "active" : ""} onClick={() => setView("local")}>
-            현지 언어로 보기
+      {recommendation ? (
+        <div className="tomo-recommendation">
+          <div className="tomo-recommendation-subject">{recommendation.subject}</div>
+          <div className="tomo-recommendation-body">{recommendation.body}</div>
+          <button className="tomo-primary-btn" onClick={onApply}>
+            Gmail 본문에 적용
           </button>
         </div>
+      ) : (
+        <p className="tomo-empty">추천 이메일이 없습니다.</p>
       )}
-      <div className="tomo-recommendation">
-        <div className="tomo-recommendation-subject">{subject}</div>
-        <div className="tomo-recommendation-body">{body}</div>
-        <button className="tomo-primary-btn" onClick={onApply}>
-          Gmail 본문에 적용
-        </button>
-      </div>
     </div>
   );
 }
