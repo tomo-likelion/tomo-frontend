@@ -88,7 +88,7 @@ export default function App() {
   return (
     <div className="tomo-shell">
       <div className="tomo-topbar">
-        <span className="tomo-logo">tomo</span>
+        <img className="tomo-logo" src="/logo.png" alt="tomo" />
         <button
           className="tomo-icon-btn"
           onClick={() => setShowGuide(true)}

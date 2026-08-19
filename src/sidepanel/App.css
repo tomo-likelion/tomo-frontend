@@ -37,10 +37,9 @@ body {
 }
 
 .tomo-logo {
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: -0.02em;
-  color: var(--tomo-lime);
+  height: 20px;
+  width: auto;
+  display: block;
 }
 
 .tomo-icon-btn {
@@ -78,9 +77,8 @@ body {
   gap: 10px;
 }
 .tomo-landing-badge {
-  font-size: 30px;
-  font-weight: 900;
-  color: var(--tomo-lime);
+  height: 30px;
+  width: auto;
 }
 .tomo-landing-title {
   font-size: 13px;
