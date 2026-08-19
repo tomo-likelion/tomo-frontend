@@ -306,6 +306,26 @@ body {
 
 .tomo-empty { color: var(--tomo-text-dim); font-size: 12px; }
 
+/* Result — recommendation language toggle */
+.tomo-lang-toggle {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+.tomo-lang-toggle button {
+  background: none;
+  border: none;
+  color: var(--tomo-text-dim);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 0 2px;
+}
+.tomo-lang-toggle button.active {
+  color: var(--tomo-lime);
+  text-decoration: underline;
+}
+
 /* Result — Info block */
 .tomo-info-block { display: flex; flex-direction: column; gap: 10px; }
 .tomo-info-label {
