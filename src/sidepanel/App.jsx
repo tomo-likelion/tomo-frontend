@@ -75,9 +75,10 @@ export default function App() {
     }
   };
 
-  const handleApplyToGmail = async () => {
-    if (!analysis?.recommendation) return;
-    await applyToGmail(analysis.recommendation);
+  const handleApplyToGmail = async (payload) => {
+    const target = payload || analysis?.recommendation;
+    if (!target) return;
+    await applyToGmail(target);
   };
 
   const handleBackToAnalysis = () => {

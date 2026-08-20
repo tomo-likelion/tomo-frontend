@@ -167,7 +167,7 @@ function RecommendationPanel({ recommendation, onApply }) {
       <div className="tomo-recommendation">
         <div className="tomo-recommendation-subject">{subject}</div>
         <div className="tomo-recommendation-body">{body}</div>
-        <button className="tomo-primary-btn" onClick={onApply}>
+        <button className="tomo-primary-btn" onClick={() => onApply({ subject, body })}>
           Gmail 본문에 적용
         </button>
       </div>
