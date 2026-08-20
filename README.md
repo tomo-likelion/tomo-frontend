@@ -63,10 +63,17 @@ npm run build    # dist/ 생성 + manifest.json 자동 복사
 
 ## 백엔드 연동
 
-`src/sidepanel/api/client.js`의 `BASE_URL`이 `http://localhost:8080/api/v1`로
-고정되어 있습니다. 백엔드 포트/도메인이 다르면 이 값을 수정하세요.
-백엔드가 로컬이 아닌 곳에 배포되면 `manifest.json`의 `host_permissions`에도
-해당 origin을 추가해야 CORS/권한 문제가 없습니다.
+`src/sidepanel/api/client.js`의 `BASE_URL`은 기본적으로 배포된 백엔드 서버
+(`http://1.201.116.59/api/v1`)를 바라보도록 설정되어 있습니다. 별도 설치 없이
+`npm run build` 후 확장 프로그램을 로드하면 바로 이 서버로 연동됩니다.
+
+서버 상태는 `http://1.201.116.59/docs`(Swagger)에서 확인할 수 있습니다.
+
+로컬에서 직접 띄운 백엔드로 테스트하려면 `BASE_URL`을
+`http://localhost:8000/api/v1`로 바꾸면 됩니다 (`manifest.json`의
+`host_permissions`에 이미 `http://localhost:8000/*`가 포함되어 있습니다).
+백엔드 포트/도메인이 이와 다르면 `host_permissions`에도 해당 origin을
+추가해야 CORS/권한 문제가 없습니다.
 
 ## 주의사항 / TODO
 
