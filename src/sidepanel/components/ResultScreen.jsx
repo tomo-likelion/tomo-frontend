@@ -5,7 +5,7 @@ const RELATIONSHIP_LABEL = { CLIENT: "고객사", PARTNER: "외부 협력사", C
 const ISSUE_LABEL = { HIGH: "위험", MEDIUM: "보통", LOW: "적정" };
 
 const TABS = [
-  { key: "reasons", label: "분석 이유" },
+  { key: "reasons", label: "AI 피드백" },
   { key: "analysis", label: "분석 결과" },
   { key: "recommendation", label: "추천 이메일" },
 ];
@@ -120,7 +120,7 @@ function AnalysisPanel({ result, onGotoRecommendation }) {
 function ReasonsPanel({ risks }) {
   return (
     <div className="tomo-analysis-card">
-      <div className="tomo-issues-title">변경 이유</div>
+      <div className="tomo-issues-title">AI 피드백</div>
       {risks?.length ? (
         <ul className="tomo-reason-list">
           {risks.map((risk, i) => (
